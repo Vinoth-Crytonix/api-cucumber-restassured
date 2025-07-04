@@ -1,0 +1,34 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'Maven 3.9.10'   // Ensure this is configured in Jenkins (Global Tool Config)
+        jdk 'Java 11'          // Or whatever version your project uses
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/Vinoth-Crytonix/api-cucumber-restassured.git' // 🔁 Replace with your actual repo URL
+            }
+        }
+
+        stage('Build and Test') {
+            steps {
+                sh 'mvn clean test'
+            }
+        }
+
+        stage('Publish Test Report') {
+            steps {
+                junit 'target/cucumber-reports/Cucumber.xml' 
+            }
+        }
+    }
+
+    post {
+        always {
+            echo "Build completed. Check results and console log."
+        }
+    }
+}
